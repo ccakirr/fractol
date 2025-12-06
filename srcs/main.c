@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 20:29:39 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 15:56:22 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 17:37:51 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ void	init_mlx(t_fract *fract)
 	if (!fract->img)
 		error_exit("Image creation failed");
 	fract->img_bp = mlx_get_data_addr(
-		fract->img,
-		&fract->bits_per_pixel,
-		&fract->line_length,
-		&fract->endian
-	);
+			fract->img,
+			&fract->bits_per_pixel,
+			&fract->line_length,
+			&fract->endian);
 }
 
 void	julia_setup(t_fract *fract)
@@ -39,6 +38,7 @@ void	julia_setup(t_fract *fract)
 	fract->max_y = 2.0;
 	fract->max_iter = 42;
 }
+
 void	mandelbrot_setup(t_fract *fract)
 {
 	fract->min_x = -2.0;
@@ -62,10 +62,8 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	else if (fract.type)
-	{
 		mandelbrot_setup(&fract);
-	}	
-	else if(!(fract.type))
+	else if (!(fract.type))
 	{
 		julia_parameter_parser(av, &fract);
 		julia_setup(&fract);

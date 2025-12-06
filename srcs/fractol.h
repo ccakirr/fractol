@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractol.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/06 17:38:38 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/06 17:38:39 by ccakir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FRACTOL_H
 # define FRACTOL_H
 # define JULIA 0
@@ -24,7 +36,6 @@ typedef struct fractol
 	double	max_x;
 	double	min_y;
 	double	max_y;
-	double	zoom;
 	double	julia_i;
 	double	julia_r;
 	int		type;

@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 21:48:32 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 15:59:23 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 17:38:23 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ double	ft_atod(char *number)
 	return ((res + (fraction / divisor)) * sign);
 }
 
-
 int	type_parser(char **args, int ac, t_fract *fract)
 {
 	char	*type;
@@ -72,18 +71,18 @@ int	type_parser(char **args, int ac, t_fract *fract)
 	}
 	if (ft_strncmp(type, "julia", 5) == 0 && ac < 4)
 	{
-		if(ac > 2 && (ft_strncmp("mandelbrot", type, 10)))
+		if (ac > 2 && (ft_strncmp("mandelbrot", type, 10)))
 		{
 			ft_printf("Please enter valid argument");
-			return(0);
+			return (0);
 		}
 		else
 		{
 			ft_printf("Please enter valid args for julia.");
 			return (0);
-		}	
+		}
 	}
-	else if(!(ft_strncmp("julia", type, 5)))
+	else if (!(ft_strncmp("julia", type, 5)))
 		fract->type = JULIA;
 	else
 		fract->type = MANDELBROT;

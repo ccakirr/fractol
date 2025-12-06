@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 05:39:30 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 15:53:54 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 17:35:28 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	mouse_handler(int button, int x, int y, t_fract *fract)
 
 	if (button != 4 && button != 5)
 		return (0);
-	zoom_factor = (button == 4) ? 0.9 : 1.1;
+	if (button == 4)
+		zoom_factor = 0.9;
+	else
+		zoom_factor = 1.1;
 	cr = map(x, fract->min_x, fract->max_x);
 	ci = map(y, fract->min_y, fract->max_y);
 	fract->min_x = cr + (fract->min_x - cr) * zoom_factor;
