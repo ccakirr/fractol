@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 02:27:17 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 03:22:14 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 03:35:32 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	julia(double zr, double zi, double jr, double ji, int max_iter)
 	return (i);
 }
 
-void    put_pixel(t_fract *fract, int x, int y, unsigned int color)
+void	put_pixel(t_fract *fract, int x, int y, unsigned int color)
 {
     char *pixel;
 
@@ -70,27 +70,29 @@ void    put_pixel(t_fract *fract, int x, int y, unsigned int color)
     *(unsigned int *)pixel = color;
 }
 
-
 void	draw_fractal(t_fract *fract)
 {
 	int		y;
 	int		x;
 	int		iter;
+	int		color;
 	double	cr;
 	double	ci;
 
 	y = 0;
-	while(y <= 800)
+	while(y < 800)
 	{
 		x = 0;
 		ci = map(y, fract->min_y, fract->max_y);
-		while(x <= 800)
+		while(x < 800)
 		{
 			cr = map(x, fract->min_x, fract->max_x);
 			if(fract->type == JULIA)
 				iter = julia(cr, ci, fract->julia_r, fract->julia_i, fract->max_iter);
 			else
 				iter = mandelbrot(cr, ci, fract->max_iter);
+			color = (iter * 255 / fract->max_iter) << 16;
+			put_pixel(fract, x, y, color);
 			x++;
 		}
 		y++;
