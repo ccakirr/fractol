@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 20:29:39 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:45:06 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 18:09:03 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,5 @@ int	main(int ac, char **av)
 	init_mlx(&fract);
 	draw_fractal(&fract);
 	init_mlx_events(&fract);
+	return (0);
 }

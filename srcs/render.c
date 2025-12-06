@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 02:27:17 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:35:10 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 18:09:24 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ double	map(double value, double min, double max)
 	double	range;
 
 	range = max - min;
-	mapped = min + ((value / 800) * range);
+	mapped = min + ((value / WIDTH) * range);
 	return (mapped);
 }
 

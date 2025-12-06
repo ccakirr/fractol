@@ -6,11 +6,19 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 21:48:32 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:38:23 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 18:08:50 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
+
+/*
+TODO: AŞAĞIDAKİ ŞEKİLDE PROGRAM ÇALIŞIYOR ÇALIŞMAMASI GEREKMEKTE
+caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asd
+caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa
+caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa asdsad asdasd asdasd
+caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa asdsad asdasd asdasd asdpknjbasşl
+*/
 
 static int	is_space(char c)
 {
