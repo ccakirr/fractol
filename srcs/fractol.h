@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 17:38:38 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:38:39 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 17:45:05 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct fractol
 	double	max_y;
 	double	julia_i;
 	double	julia_r;
+	double	zoom;
 	int		type;
 	int		max_iter;
 }				t_fract;

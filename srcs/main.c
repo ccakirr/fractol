@@ -6,7 +6,7 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 20:29:39 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:37:51 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 17:45:06 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	julia_setup(t_fract *fract)
 	fract->max_x = 2.0;
 	fract->min_y = -2.0;
 	fract->max_y = 2.0;
+	fract->zoom = 1.0;
 	fract->max_iter = 42;
 }
 
@@ -45,6 +46,7 @@ void	mandelbrot_setup(t_fract *fract)
 	fract->max_x = 1.0;
 	fract->min_y = -1.5;
 	fract->max_y = 1.5;
+	fract->zoom = 1.0;
 	fract->max_iter = 42;
 }
 
