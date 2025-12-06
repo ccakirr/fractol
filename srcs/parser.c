@@ -6,19 +6,11 @@
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 21:48:32 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 18:08:50 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 18:33:02 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-/*
-TODO: AŞAĞIDAKİ ŞEKİLDE PROGRAM ÇALIŞIYOR ÇALIŞMAMASI GEREKMEKTE
-caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asd
-caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa
-caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa asdsad asdasd asdasd
-caner@caner-KLVL-WXX9:~/Desktop/fractol$ ./fractol asdsadsa asdsad asdasd asdasd asdpknjbasşl
-*/
 
 static int	is_space(char c)
 {
@@ -72,29 +64,25 @@ int	type_parser(char **args, int ac, t_fract *fract)
 {
 	char	*type;
 
-	type = ft_strtolower(args[1]);
 	if (ac < 2)
+		return (ft_printf("Error: Missing argument.\n"), 0);
+	type = ft_strtolower(args[1]);
+	if (!ft_strncmp(type, "julia", 5))
 	{
-		ft_printf("Error! Please enter arg.");
-	}
-	if (ft_strncmp(type, "julia", 5) == 0 && ac < 4)
-	{
-		if (ac > 2 && (ft_strncmp("mandelbrot", type, 10)))
-		{
-			ft_printf("Please enter valid argument");
-			return (0);
-		}
-		else
-		{
-			ft_printf("Please enter valid args for julia.");
-			return (0);
-		}
-	}
-	else if (!(ft_strncmp("julia", type, 5)))
+		if (ac != 4)
+			return (ft_printf("Error: Julia needs 2 params.\n"), 0);
 		fract->type = JULIA;
-	else
+		return (1);
+	}
+	if (!ft_strncmp(type, "mandelbrot", 10))
+	{
+		if (ac != 2)
+			return (ft_printf("Error: Mandelbrot takes no params.\n"), 0);
 		fract->type = MANDELBROT;
-	return (1);
+		return (1);
+	}
+	ft_printf("Error: Invalid type. Use julia or mandelbrot.\n");
+	return (0);
 }
 
 void	julia_parameter_parser(char	**args, t_fract *fract)
