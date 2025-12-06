@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   exit_prog.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/05 21:51:12 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 16:00:09 by ccakir           ###   ########.fr       */
+/*   Created: 2025/12/06 15:03:43 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/06 15:55:09 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-char	*ft_strtolower(char *str)
+int	exit_prog(t_fract *fract)
 {
-	size_t	i;
-
-	i = 0;
-	while (i < ft_strlen(str))
+	if (fract->img)
+		mlx_destroy_image(fract->mlx, fract->img);
+	if (fract->win)
+		mlx_destroy_window(fract->mlx, fract->win);
+	if (fract->mlx)
 	{
-		str[i] = ft_tolower(str[i]);
-		i++;
+		mlx_destroy_display(fract->mlx);
+		free(fract->mlx);
 	}
-	return (str);
-}
-
-void	error_exit(char *msg)
-{
-	write(2, "Error\n", 6);
-	if (!msg)
-		write(2, "Unknown Error!", ft_strlen("Unknown Error!"));
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
-	exit(1);
+	exit(0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccakir <ccakir@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 21:48:32 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 02:28:56 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/06 15:59:23 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ double	ft_atod(char *number)
 }
 
 
-int	*type_parser(char **args, int ac, t_fract *fract)
+int	type_parser(char **args, int ac, t_fract *fract)
 {
 	char	*type;
 

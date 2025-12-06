@@ -14,20 +14,20 @@ MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 PRINTF_DIR = my_libs/ft_printf
-PRINTF = $(PRINTF_DIR)/ft_printf.a
+PRINTF = $(PRINTF_DIR)/libftprintf.a
 
 LIBFT_DIR = my_libs/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS_DIR = src/
-SRCS = main.c\
-parser.c\
-utils.c\
+SRCS_DIR = srcs/
+SRCS = $(addprefix $(SRCS_DIR), main.c parser.c utils.c render.c events.c handlers.c exit_prog.c)
 
-OBJS = $(SRCS:.c=.o)
+OBJS_DIR = obj/
+OBJS = $(addprefix $(OBJS_DIR), $(notdir $(SRCS:.c=.o)))
 
-%.o: %.c
-	@$(CC) $(CFLAGS)  -c $< -o $@
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.c
+	@mkdir -p $(OBJS_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
@@ -37,26 +37,30 @@ $(MLX_LIB):
 	@echo "$(GREEN)✓ MLX library ready!$(RESET)"
 
 
-$(NAME): $(MLX_LIB) $(PRINTF) $(OBJS)
-	@if [ ! -f $(NAME) ]; then \
-		echo "$(YELLOW)Linking $(NAME)...$(RESET)"; \
-		$(CC) $(CFLAGS) $(OBJS) $(PRINTF) $(MLX_FLAGS) -o $(NAME); \
-		echo "$(GREEN)✓ $(NAME) created!$(RESET)"; \
-	else \
-		if [ $(shell find $(OBJS) -newer $(NAME) 2>/dev/null | wc -l) -gt 0 ]; then \
-			echo "$(YELLOW)Relinking $(NAME)...$(RESET)"; \
-			$(CC) $(CFLAGS) $(OBJS) $(FT_PRINTF_LIB) $(MLX_FLAGS) -o $(NAME); \
-			echo "$(GREEN)✓ $(NAME) updated!$(RESET)"; \
-		else \
-			echo "$(GREEN)✓ $(NAME) is up to date!$(RESET)"; \
-		fi \
-	fi
+$(PRINTF):
+	@echo "$(YELLOW)Compiling ft_printf...$(RESET)"
+	@make -C $(PRINTF_DIR) > /dev/null 2>&1
+	@echo "$(GREEN)✓ ft_printf ready!$(RESET)"
+
+$(LIBFT):
+	@echo "$(YELLOW)Compiling libft...$(RESET)"
+	@make -C $(LIBFT_DIR) > /dev/null 2>&1
+	@echo "$(GREEN)✓ libft ready!$(RESET)"
+
+$(NAME): $(MLX_LIB) $(PRINTF) $(LIBFT) $(OBJS)
+	@echo "$(YELLOW)Linking $(NAME)...$(RESET)"
+	@$(CC) $(CFLAGS) $(OBJS) $(PRINTF) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
+	@echo "$(GREEN)✓ $(NAME) created!$(RESET)"
 
 clean:
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJS_DIR)
+	@make -C $(PRINTF_DIR) clean > /dev/null 2>&1
+	@make -C $(LIBFT_DIR) clean > /dev/null 2>&1
 
 fclean: clean
 	@rm -f $(NAME)
+	@make -C $(PRINTF_DIR) fclean > /dev/null 2>&1
+	@make -C $(LIBFT_DIR) fclean > /dev/null 2>&1
 
 re: fclean all
 
