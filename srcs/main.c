@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: ccakir <ccakir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 22:50:20 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/07 12:40:48 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:41:59 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ int	main(int ac, char **av)
 {
 	t_fract	fract;
 
+	if (ac < 2)
+	{
+		ft_printf("Please enter valid args!\n Usage is:\n./fractol mandelbrot\n./fractol julia 'arg1' 'arg2'\n");
+		exit(1);
+	}
 	if (type_parsing(av, ac, &fract))
 	{
 		ft_printf("The available parameters are:\n./fractol mandelbrot\n./fractol julia 'arg1' 'arg2'\n");

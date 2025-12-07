@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: ccakir <ccakir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 00:15:20 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/07 13:37:48 by ccakir           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:49:33 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,16 @@ void	put_pixel(t_fract *fract, int x, int y, int iteration)
 {
 	char	*pixel;
 	int		color;
+	int		color_value;
 
 	if (iteration == fract->max_iter)
 		color = 0x000000;
 	else
-		color = (iteration * 255 / fract->max_iter);
+	{
+		color_value = (iteration * 255) / fract->max_iter;
+		color = (color_value << 16) | ((color_value * color_value) << 8) | (255 - color_value);
+
+	}
 	pixel = fract->img_bp + (y * fract->line_lenght
 			+ x * (fract->bits_per_pixel / 8));
 	*(unsigned int *)pixel = color;
