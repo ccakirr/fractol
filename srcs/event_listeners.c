@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_prog.c                                        :+:      :+:    :+:   */
+/*   event_listeners.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/06 15:03:43 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 17:39:11 by ccakir           ###   ########.fr       */
+/*   Created: 2025/12/07 03:28:16 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/07 13:37:39 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int	exit_prog(t_fract *fract)
+void	init_mlx_events(t_fract *fract)
 {
-	if (fract->img)
-		mlx_destroy_image(fract->mlx, fract->img);
-	if (fract->win)
-		mlx_destroy_window(fract->mlx, fract->win);
-	if (fract->mlx)
-	{
-		mlx_destroy_display(fract->mlx);
-		free(fract->mlx);
-	}
-	exit(0);
+	mlx_mouse_hook(fract->win, mouse_handler, fract);
+	mlx_key_hook(fract->win, esc_handler, fract);
+	mlx_hook(fract->win, 17, 0, exit_prog, fract);
 }

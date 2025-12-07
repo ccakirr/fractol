@@ -1,66 +1,92 @@
-GREEN   = \033[0;32m
-YELLOW  = \033[0;33m
-BLUE    = \033[0;34m
-RESET   = \033[0m
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/12/07 by ccakir                    #+#    #+#              #
+#    Updated: 2025/12/07 by ccakir                   ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-NAME = fractol
+NAME		= fractol
 
-CC = cc
+# Directories
+SRCS_DIR	= srcs
+LIBS_DIR	= libs
+LIBFT_DIR	= $(LIBS_DIR)/libft
+PRINTF_DIR	= $(LIBS_DIR)/ft_printf
+MLX_DIR		= $(LIBS_DIR)/minilibx-linux
 
-CFLAGS = -Wall -Wextra -Werror
+# Source files
+SRCS		= $(SRCS_DIR)/main.c \
+			  $(SRCS_DIR)/parser.c \
+			  $(SRCS_DIR)/render.c \
+			  $(SRCS_DIR)/utils.c \
+			  $(SRCS_DIR)/handlers.c \
+			  $(SRCS_DIR)/event_listeners.c
 
-MLX_DIR = my_libs/minilibx-linux
-MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+OBJS		= $(SRCS:.c=.o)
 
-PRINTF_DIR = my_libs/ft_printf
-PRINTF = $(PRINTF_DIR)/libftprintf.a
+# Libraries
+LIBFT		= $(LIBFT_DIR)/libft.a
+PRINTF		= $(PRINTF_DIR)/libftprintf.a
+MLX			= $(MLX_DIR)/libmlx.a
 
-LIBFT_DIR = my_libs/libft
-LIBFT = $(LIBFT_DIR)/libft.a
+# Compiler and flags
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror
+INCLUDES	= -I$(SRCS_DIR) -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I$(MLX_DIR)
+LDFLAGS		= -L$(LIBFT_DIR) -L$(PRINTF_DIR) -L$(MLX_DIR)
+LDLIBS		= -lft -lftprintf -lmlx -lXext -lX11 -lm
 
-SRCS_DIR = srcs/
-SRCS = $(addprefix $(SRCS_DIR), main.c parser.c utils.c render.c events.c handlers.c exit_prog.c)
+# Colors
+GREEN		= \033[0;32m
+RED			= \033[0;31m
+RESET		= \033[0m
 
-OBJS_DIR = obj/
-OBJS = $(addprefix $(OBJS_DIR), $(notdir $(SRCS:.c=.o)))
-
-$(OBJS_DIR)%.o: $(SRCS_DIR)%.c
-	@mkdir -p $(OBJS_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
-
+# Rules
 all: $(NAME)
 
-$(MLX_LIB):
-	@echo "$(YELLOW)Compiling MLX library...$(RESET)"
-	@make -C $(MLX_DIR) > /dev/null 2>&1
-	@echo "$(GREEN)✓ MLX library ready!$(RESET)"
+$(NAME): $(LIBFT) $(PRINTF) $(MLX) $(OBJS)
+	@echo "$(GREEN)Linking $(NAME)...$(RESET)"
+	@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+	@echo "$(GREEN)✓ $(NAME) created successfully!$(RESET)"
 
-
-$(PRINTF):
-	@echo "$(YELLOW)Compiling ft_printf...$(RESET)"
-	@make -C $(PRINTF_DIR) > /dev/null 2>&1
-	@echo "$(GREEN)✓ ft_printf ready!$(RESET)"
+%.o: %.c
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
-	@echo "$(YELLOW)Compiling libft...$(RESET)"
-	@make -C $(LIBFT_DIR) > /dev/null 2>&1
-	@echo "$(GREEN)✓ libft ready!$(RESET)"
+	@echo "$(GREEN)Building libft...$(RESET)"
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@echo "$(GREEN)✓ libft built!$(RESET)"
 
-$(NAME): $(MLX_LIB) $(PRINTF) $(LIBFT) $(OBJS)
-	@echo "$(YELLOW)Linking $(NAME)...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJS) $(PRINTF) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
-	@echo "$(GREEN)✓ $(NAME) created!$(RESET)"
+$(PRINTF):
+	@echo "$(GREEN)Building ft_printf...$(RESET)"
+	@$(MAKE) -C $(PRINTF_DIR) --no-print-directory
+	@echo "$(GREEN)✓ ft_printf built!$(RESET)"
+
+$(MLX):
+	@echo "$(GREEN)Building minilibx...$(RESET)"
+	@$(MAKE) -C $(MLX_DIR) --no-print-directory
+	@echo "$(GREEN)✓ minilibx built!$(RESET)"
 
 clean:
-	@rm -rf $(OBJS_DIR)
-	@make -C $(PRINTF_DIR) clean > /dev/null 2>&1
-	@make -C $(LIBFT_DIR) clean > /dev/null 2>&1
+	@echo "$(RED)Cleaning object files...$(RESET)"
+	@rm -f $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@$(MAKE) -C $(PRINTF_DIR) clean --no-print-directory
+	@$(MAKE) -C $(MLX_DIR) clean --no-print-directory
+	@echo "$(RED)✓ Object files cleaned!$(RESET)"
 
 fclean: clean
+	@echo "$(RED)Cleaning executables and libraries...$(RESET)"
 	@rm -f $(NAME)
-	@make -C $(PRINTF_DIR) fclean > /dev/null 2>&1
-	@make -C $(LIBFT_DIR) fclean > /dev/null 2>&1
+	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	@$(MAKE) -C $(PRINTF_DIR) fclean --no-print-directory
+	@echo "$(RED)✓ All cleaned!$(RESET)"
 
 re: fclean all
 

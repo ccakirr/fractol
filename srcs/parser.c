@@ -5,88 +5,116 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/05 21:48:32 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 18:33:02 by ccakir           ###   ########.fr       */
+/*   Created: 2025/12/06 22:57:38 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/07 13:55:03 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static int	is_space(char c)
+static int	is_valid_number(char *str)
 {
-	if (c == ' ' || (c >= 9 && c <= 13))
+	int	i;
+	int	has_digit;
+	int	has_dot;
+
+	i = 0;
+	has_digit = 0;
+	has_dot = 0;
+	while (is_space(str[i]))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
 	{
-		return (1);
+		if (str[i] >= '0' && str[i] <= '9')
+			has_digit = 1;
+		else if (str[i] == '.' && !has_dot)
+			has_dot = 1;
+		else
+			return (0);
+		i++;
 	}
-	return (0);
+	return (has_digit);
+}
+
+static int	parse_sign(char *str, int *i)
+{
+	int	sign;
+
+	sign = 1;
+	while (is_space(str[*i]))
+		(*i)++;
+	if (str[*i] == '-' || str[*i] == '+')
+	{
+		if (str[*i] == '-')
+			sign = -1;
+		(*i)++;
+	}
+	return (sign);
+}
+
+static double	parse_fraction(char *str, int *i)
+{
+	double	fraction;
+	double	divisor;
+
+	fraction = 0.0;
+	divisor = 1.0;
+	if (str[*i] == '.')
+	{
+		(*i)++;
+		while (str[*i] >= '0' && str[*i] <= '9')
+		{
+			fraction = fraction * 10.0 + (str[*i] - '0');
+			divisor *= 10.0;
+			(*i)++;
+		}
+	}
+	return (fraction / divisor);
 }
 
 double	ft_atod(char *number)
 {
 	double	res;
-	double	sign;
-	double	fraction;
-	double	divisor;
+	int		sign;
 	int		i;
 
 	i = 0;
 	res = 0.0;
-	fraction = 0.0;
-	divisor = 1.0;
-	sign = 1.0;
-	while (is_space(number[i]))
-		i++;
-	if (number[i] == '-' || number[i] == '+')
-	{
-		if (number[i] == '-')
-			sign = -1.0;
-		i++;
-	}
+	sign = parse_sign(number, &i);
 	while (number[i] >= '0' && number[i] <= '9')
 	{
 		res = res * 10.0 + (number[i] - '0');
 		i++;
 	}
-	if (number[i] == '.')
-	{
-		i++;
-		while (number[i] >= '0' && number[i] <= '9')
-		{
-			fraction = fraction * 10.0 + (number[i] - '0');
-			divisor *= 10.0;
-			i++;
-		}
-	}
-	return ((res + (fraction / divisor)) * sign);
+	res += parse_fraction(number, &i);
+	return (res * sign);
 }
 
-int	type_parser(char **args, int ac, t_fract *fract)
+int	type_parsing(char	**av, int ac, t_fract *fract)
 {
 	char	*type;
 
 	if (ac < 2)
-		return (ft_printf("Error: Missing argument.\n"), 0);
-	type = ft_strtolower(args[1]);
-	if (!ft_strncmp(type, "julia", 5))
+		ft_printf("Please enter valid args.");
+	type = ft_strlower(av[1]);
+	if (ft_strncmp("mandelbrot", type, 10) == 0
+		&& ft_strlen(type) == 10 && ac == 2)
+		return (fract->type = MANDELBROT, 0);
+	else if (ft_strncmp("julia", type, 5) == 0 && ac == 4)
 	{
-		if (ac != 4)
-			return (ft_printf("Error: Julia needs 2 params.\n"), 0);
+		if (!is_valid_number(av[2]) || !is_valid_number(av[3]))
+		{
+			ft_printf("Julia parameters must be numeric values.\n");
+			return (1);
+		}
+		fract->julia_r = ft_atod(av[2]);
+		fract->julia_i = ft_atod(av[3]);
 		fract->type = JULIA;
-		return (1);
+		return (0);
 	}
-	if (!ft_strncmp(type, "mandelbrot", 10))
-	{
-		if (ac != 2)
-			return (ft_printf("Error: Mandelbrot takes no params.\n"), 0);
-		fract->type = MANDELBROT;
-		return (1);
-	}
-	ft_printf("Error: Invalid type. Use julia or mandelbrot.\n");
-	return (0);
-}
-
-void	julia_parameter_parser(char	**args, t_fract *fract)
-{
-	fract->julia_i = ft_atod(args[2]);
-	fract->julia_r = ft_atod(args[3]);
+	else
+		ft_printf("Please enter valid args.");
+	return (1);
 }

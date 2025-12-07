@@ -5,73 +5,62 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/05 20:29:39 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 18:09:03 by ccakir           ###   ########.fr       */
+/*   Created: 2025/12/06 22:50:20 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/07 12:40:48 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	init_mlx(t_fract *fract)
-{
-	fract->mlx = mlx_init();
-	if (!fract->mlx)
-		error_exit("MLX init failed");
-	fract->win = mlx_new_window(fract->mlx, WIDTH, HEIGHT, "fractol");
-	if (!fract->win)
-		error_exit("Window creation failed");
-	fract->img = mlx_new_image(fract->mlx, WIDTH, HEIGHT);
-	if (!fract->img)
-		error_exit("Image creation failed");
-	fract->img_bp = mlx_get_data_addr(
-			fract->img,
-			&fract->bits_per_pixel,
-			&fract->line_length,
-			&fract->endian);
-}
-
-void	julia_setup(t_fract *fract)
+void	set_julia(t_fract *fract)
 {
 	fract->min_x = -2.0;
 	fract->max_x = 2.0;
 	fract->min_y = -2.0;
 	fract->max_y = 2.0;
-	fract->zoom = 1.0;
 	fract->max_iter = 42;
 }
 
-void	mandelbrot_setup(t_fract *fract)
+void	set_mandelbrot(t_fract *fract)
 {
 	fract->min_x = -2.0;
 	fract->max_x = 1.0;
 	fract->min_y = -1.5;
 	fract->max_y = 1.5;
-	fract->zoom = 1.0;
 	fract->max_iter = 42;
+}
+
+void	init_minilibx(t_fract *fract)
+{
+	fract->mlx = mlx_init();
+	if (!(fract->mlx))
+		error_exit("Mlx initilation error!");
+	fract->win = mlx_new_window(fract->mlx, WIDTH, HEIGHT, "fractol");
+	if (!(fract->win))
+		error_exit("Window creation error!");
+	fract->img = mlx_new_image(fract->mlx, WIDTH, HEIGHT);
+	if (!(fract->img))
+		error_exit("Image creation error!");
+	fract->img_bp = mlx_get_data_addr(fract->img, &fract->bits_per_pixel,
+			&fract->line_lenght, &fract->endian);
 }
 
 int	main(int ac, char **av)
 {
 	t_fract	fract;
-	int		type;
 
-	if (ac < 2)
-		error_exit("Please enter the fractal type!");
-	type = type_parser(av, ac, &fract);
-	if (type == 0)
+	if (type_parsing(av, ac, &fract))
 	{
-		ft_printf("Parsing error\n");
-		return (1);
+		ft_printf("The available parameters are:\n./fractol mandelbrot\n./fractol julia 'arg1' 'arg2'\n");
+		exit(1);
 	}
-	else if (fract.type)
-		mandelbrot_setup(&fract);
-	else if (!(fract.type))
-	{
-		julia_parameter_parser(av, &fract);
-		julia_setup(&fract);
-	}
-	init_mlx(&fract);
+	if (!(fract.type))
+		set_julia(&fract);
+	if ((fract.type))
+		set_mandelbrot(&fract);
+	init_minilibx(&fract);
 	draw_fractal(&fract);
 	init_mlx_events(&fract);
+	mlx_loop(fract.mlx);
 	return (0);
 }

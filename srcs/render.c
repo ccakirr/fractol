@@ -5,100 +5,101 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccakir <ccakir@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/06 02:27:17 by ccakir            #+#    #+#             */
-/*   Updated: 2025/12/06 18:09:24 by ccakir           ###   ########.fr       */
+/*   Created: 2025/12/07 00:15:20 by ccakir            #+#    #+#             */
+/*   Updated: 2025/12/07 13:37:48 by ccakir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-double	map(double value, double min, double max)
+double	pixel_to_coordinate(double value, double min, double max)
 {
 	double	mapped;
 	double	range;
 
 	range = max - min;
-	mapped = min + ((value / WIDTH) * range);
+	mapped = (min + ((value / HEIGHT) * range));
 	return (mapped);
 }
 
-int	mandelbrot(double cr, double ci, int max_iter)
+int	calculate_julia(t_fract *fract, double zr, double zi)
 {
 	int		iterate;
-	double	zi;
-	double	zr;
 	double	tmp;
 
-	zi = 0;
-	zr = 0;
 	iterate = 0;
-	while (iterate < max_iter)
+	while (iterate < fract->max_iter)
 	{
-		tmp = (zr * zr) - (zi * zi) + cr;
-		zi = (2 * zr * zi) + ci;
+		tmp = (zr * zr) - (zi * zi) + fract->julia_r;
+		zi = (2 * zi * zr) + fract->julia_i;
 		zr = tmp;
-		if ((zr * zr) + (zi * zi) > 4)
+		if (zi + zr > 4)
 			break ;
 		iterate++;
 	}
 	return (iterate);
 }
 
-int	julia(double zr, double zi, t_fract *fract)
+int	calculate_mandelbrot(t_fract *fract, double cr, double ci)
 {
-	int		i;
 	double	tmp;
+	double	zi;
+	double	zr;
+	int		iterate;
 
-	i = 0;
-	while (i < fract->max_iter)
+	zi = 0;
+	zr = 0;
+	iterate = 0;
+	while (iterate < fract->max_iter)
 	{
-		tmp = (zr * zr) - (zi * zi) + fract->julia_r;
-		zi = (2 * zr * zi) + fract->julia_i;
+		tmp = (zr * zr) - (zi * zi) + cr;
+		zi = 2 * zr * zi + ci;
 		zr = tmp;
-		if ((zr * zr) + (zi * zi) > 4)
+		if (zi * zi + zr * zr > 4.0)
 			break ;
-		i++;
+		iterate++;
 	}
-	return (i);
+	return (iterate);
 }
 
-void	put_pixel(t_fract *fract, int x, int y, int iter)
+void	put_pixel(t_fract *fract, int x, int y, int iteration)
 {
 	char	*pixel;
 	int		color;
 
-	if (iter == fract->max_iter)
+	if (iteration == fract->max_iter)
 		color = 0x000000;
 	else
-		color = (iter * 255 / fract->max_iter) << 16;
-	pixel = fract->img_bp + (y * fract->line_length
+		color = (iteration * 255 / fract->max_iter);
+	pixel = fract->img_bp + (y * fract->line_lenght
 			+ x * (fract->bits_per_pixel / 8));
 	*(unsigned int *)pixel = color;
 }
 
 void	draw_fractal(t_fract *fract)
 {
-	int		y;
 	int		x;
-	int		iter;
+	int		y;
+	int		iteration;
 	double	cr;
 	double	ci;
 
 	y = 0;
-	while (y < 800)
+	while (y < HEIGHT)
 	{
 		x = 0;
-		ci = map(y, fract->min_y, fract->max_y);
-		while (x < 800)
+		ci = pixel_to_coordinate(y, fract->min_y, fract->max_y);
+		while (x < WIDTH)
 		{
-			cr = map(x, fract->min_x, fract->max_x);
-			if (fract->type == JULIA)
-				iter = julia(cr, ci, fract);
+			cr = pixel_to_coordinate(x, fract->min_x, fract->max_x);
+			if (!(fract->type))
+				iteration = calculate_julia(fract, cr, ci);
 			else
-				iter = mandelbrot(cr, ci, fract->max_iter);
-			put_pixel(fract, x, y, iter);
+				iteration = calculate_mandelbrot(fract, cr, ci);
+			put_pixel(fract, x, y, iteration);
 			x++;
 		}
 		y++;
 	}
+	mlx_put_image_to_window(fract->mlx, fract->win, fract->img, 0, 0);
 }

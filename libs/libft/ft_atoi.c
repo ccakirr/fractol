@@ -18,7 +18,7 @@ static int	is_space(char c)
 	}
 	return (0);
 }
-
+//TODO: 	if(!(number[i] >= '0') && !(number[i] <= '9')) return (SMTHNGELSE);
 int	ft_atoi(const char *number)
 {
 	int	res;
